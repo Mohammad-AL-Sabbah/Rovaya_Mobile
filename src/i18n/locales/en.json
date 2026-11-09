@@ -1,0 +1,420 @@
+{
+  "welcome": {
+    "title": "Discover Palestine, one story at a time",
+    "subtitle": "Plan your trip, explore historic cities and travel with local guides, all in one app.",
+    "features": {
+      "planner": "Smart trip planner",
+      "guides": "Local guides",
+      "stories": "Stories of every place"
+    },
+    "learnMore": "Learn more about Rovaya",
+    "slides": {
+      "jerusalem": {
+        "city": "Jerusalem",
+        "place": "The Old City and its holy sites"
+      },
+      "jaffa": {
+        "city": "Jaffa",
+        "place": "An ancient port on the Mediterranean"
+      },
+      "acre": {
+        "city": "Acre",
+        "place": "Crusader walls and the old harbor"
+      },
+      "bethlehem": {
+        "city": "Bethlehem",
+        "place": "The Church of the Nativity"
+      }
+    },
+    "destinations": "Popular destinations"
+  },
+  "about": {
+    "title": "About Rovaya",
+    "story": {
+      "title": "Our story",
+      "p1": "Rovaya was born from our deep passion for Palestine and its ancient heritage. We believe every corner of our land holds a story worth telling, and every stone in our cities carries memories and tales stretching back thousands of years.",
+      "p2": "We combined modern technology with Palestinian authenticity to offer you a one-of-a-kind travel experience that introduces you to the beauty of Palestine and its cultural and natural diversity."
+    },
+    "vision": {
+      "title": "Our vision",
+      "text": "To be the first destination for discovering Palestine, and to introduce the world to its beauty and heritage through personalized, innovative travel experiences."
+    },
+    "mission": {
+      "title": "Our mission",
+      "text": "To empower travelers to explore Palestine in depth, support local tourism, and preserve our heritage for future generations through technology."
+    },
+    "why": {
+      "title": "Why Rovaya?",
+      "ai": {
+        "title": "Advanced artificial intelligence",
+        "text": "We use the latest AI technologies to analyze your interests and design the perfect trip for your taste and budget."
+      },
+      "authentic": {
+        "title": "Authentic Palestinian content",
+        "text": "Accurate, well-documented information about every city, landmark and restaurant, with a focus on Palestinian heritage and identity."
+      }
+    }
+  },
+  "auth": {
+    "title": "Welcome to Rovaya",
+    "subtitle": "Sign in to plan your trip, save your favorite places and travel with local guides.",
+    "login": "Log in",
+    "register": "Create a new account"
+  },
+  "common": {
+    "getStarted": "Get started",
+    "back": "Back",
+    "switchLanguage": "Switch language",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "cancel": "Cancel",
+    "comingSoon": "Coming soon",
+    "comingSoonText": "We're putting the finishing touches on this section.",
+    "sampleData": "Sample data",
+    "retry": "Try again"
+  },
+  "errors": {
+    "network": "Can't reach the server. Check your internet connection and try again.",
+    "timeout": "The request took too long. Please try again.",
+    "server": "Our servers are having a problem. Please try again in a moment.",
+    "validation": "Some of the information you entered isn't valid. Please check it and try again.",
+    "generic": "Something went wrong. Please try again.",
+    "unexpected": "An unexpected error occurred. Please try again.",
+    "notFound": "We couldn't find this content. Please try again later."
+  },
+  "validation": {
+    "emailRequired": "Please enter your email.",
+    "emailInvalid": "Please enter a valid email address.",
+    "passwordRequired": "Please enter your password.",
+    "firstNameRequired": "Please enter your first name.",
+    "lastNameRequired": "Please enter your last name.",
+    "phoneRequired": "Please enter your phone number.",
+    "phoneInvalid": "Please enter a valid phone number, for example +970 59 123 4567.",
+    "countryRequired": "Please enter your country.",
+    "passwordWeak": "Your password doesn't meet all the requirements below.",
+    "confirmRequired": "Please confirm your password.",
+    "passwordMismatch": "The passwords don't match.",
+    "codeIncomplete": "Please enter the 4-digit code."
+  },
+  "serverMessages": {
+    "invalidCredentials": "The email or password is incorrect.",
+    "emailNotConfirmedResent": "Your account isn't activated yet. We've sent a new activation link to your email, so please check your inbox.",
+    "emailNotConfirmedWait": "Your account isn't activated yet. Please wait {{seconds}} seconds before trying to log in again.",
+    "blockedPermanent": "Your account has been permanently blocked. Reason: {{reason}}. Please contact support.",
+    "blockedTemporary": "Your account is temporarily blocked. Reason: {{reason}}. Time remaining: {{remaining}}.",
+    "lockedOut": "Your account is temporarily locked after too many failed attempts. Please try again in a few minutes.",
+    "emailTaken": "This email is already registered.",
+    "registerFailed": "We couldn't create your account. Please check your details and try again.",
+    "passwordWeak": "Your password doesn't meet the security requirements.",
+    "emailNotRegistered": "This email isn't registered.",
+    "codeInvalid": "The code is incorrect. Please check it and try again.",
+    "codeExpired": "This code has expired. Please request a new one.",
+    "resetFailed": "We couldn't change your password. Please try again."
+  },
+  "duration": {
+    "lessThanMinute": "less than a minute",
+    "minute": {
+      "one": "{{n}} minute",
+      "other": "{{n}} minutes"
+    },
+    "hour": {
+      "one": "{{n}} hour",
+      "other": "{{n}} hours"
+    },
+    "day": {
+      "one": "{{n}} day",
+      "other": "{{n}} days"
+    },
+    "daysAndHours": "{{days}} and {{hours}}"
+  },
+  "password": {
+    "levels": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    },
+    "rules": {
+      "length": "At least {{n}} characters",
+      "digit": "A number (0-9)",
+      "lower": "A lowercase letter (a-z)",
+      "upper": "An uppercase letter (A-Z)",
+      "symbol": "A symbol (such as @ # ! $)"
+    }
+  },
+  "login": {
+    "title": "Welcome back",
+    "tagline": "Your next story in Palestine is waiting.",
+    "email": "Email",
+    "emailPlaceholder": "name@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgot": "Forgot password?",
+    "submit": "Log in",
+    "noAccount": "Don't have an account yet?",
+    "createAccount": "Create account",
+    "notice": {
+      "passwordReset": "Your password was changed. Log in with your new password."
+    }
+  },
+  "register": {
+    "title": "Begin your journey",
+    "tagline": "Create your account and discover Palestine, your way.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone number",
+    "phonePlaceholder": "+970 59 123 4567",
+    "country": "Country",
+    "countryPlaceholder": "Where are you from?",
+    "password": "Password",
+    "passwordPlaceholder": "Create a password",
+    "confirmPassword": "Confirm password",
+    "confirmPlaceholder": "Re-enter your password",
+    "submit": "Create account",
+    "haveAccount": "Already have an account?",
+    "login": "Log in",
+    "success": {
+      "title": "Check your email",
+      "text": "We sent an activation link to {{email}}. Open it to activate your account, then log in.",
+      "hint": "Didn't get the email? Try logging in and we'll send you a new link.",
+      "goLogin": "Go to log in"
+    }
+  },
+  "forgot": {
+    "title": "Forgot your password?",
+    "tagline": "No worries, we'll send a code to your email.",
+    "intro": "Enter the email you used to sign up and we'll send you a 4-digit code to reset your password.",
+    "email": "Email",
+    "submit": "Send code",
+    "back": "Back to log in"
+  },
+  "reset": {
+    "title": "Create a new password",
+    "tagline": "Enter the code we sent you and choose a new password.",
+    "sentTo": "If {{email}} is registered, a 4-digit code is on its way. It's valid for 5 minutes.",
+    "code": "Verification code",
+    "newPassword": "New password",
+    "newPasswordPlaceholder": "Create a new password",
+    "confirmPassword": "Confirm new password",
+    "submit": "Reset password",
+    "resend": "Resend code",
+    "resendIn": "Resend code in {{seconds}}s",
+    "resent": "A new code is on its way to your inbox."
+  },
+  "tabs": {
+    "recommendations": {
+      "label": "For You",
+      "title": "Recommendations",
+      "description": "Suggestions picked for your interests, budget and travel style."
+    },
+    "planner": {
+      "label": "Planner",
+      "title": "Smart Planner",
+      "description": "Let our AI design the perfect trip for your taste and budget."
+    },
+    "profile": {
+      "label": "Profile",
+      "title": "Profile",
+      "description": "Editing your profile details is coming soon."
+    },
+    "settings": {
+      "label": "Settings",
+      "title": "Settings"
+    },
+    "home": {
+      "label": "Home",
+      "title": "Home"
+    },
+    "profile": {
+  "welcome": "Welcome",
+  "guest": "Traveler",
+  "loading": "Loading data...",
+  "editProfile": "Edit Profile",
+  "medicalProfile": "Medical Profile",
+  "medicalSubtitle": "Chronic diseases, medications, allergies",
+  "emergencyContacts": "Emergency Contacts",
+  "emergencySubtitle": "Important numbers for emergencies",
+  "changePassword": "Change Password",
+  "notifications": "Notifications",
+  "helpSupport": "Help & Support",
+  "aboutRovaya": "About Rovaya",
+  "sections": {
+    "personal": "Personal",
+    "account": "Account",
+    "support": "Support"
+  }
+}
+  },
+  "roles": {
+    "SuperAdmin": "Super Admin",
+    "Admin": "Staff",
+    "Customer": "Traveler"
+  },
+  "settings": {
+    "general": "General",
+    "language": "Language",
+    "account": "Account",
+    "signedInAs": "Signed in as",
+    "logout": "Log out",
+    "logoutConfirmTitle": "Log out?",
+    "logoutConfirmText": "You'll need to log in again to access your account."
+  },
+  "home": {
+    "guest": "Traveler",
+    "footer": "Discover Palestine, your way.",
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "hero": {
+      "kicker": "DISCOVER"
+    },
+    "quick": {
+      "active": "Active trips",
+      "archived": "Archive",
+      "recommendations": "Recommendations"
+    },
+    "trips": {
+      "emptyTitle": "Your journey starts here",
+      "emptyText": "Create your first trip and let our AI build it around your taste and budget.",
+      "cta": "Create a trip"
+    },
+    "places": {
+      "jerusalem": {
+        "city": "Jerusalem",
+        "place": "The Old City and its holy sites"
+      },
+      "jaffa": {
+        "city": "Jaffa",
+        "place": "An ancient port on the Mediterranean"
+      },
+      "acre": {
+        "city": "Acre",
+        "place": "Crusader walls and the old harbor"
+      },
+      "bethlehem": {
+        "city": "Bethlehem",
+        "place": "The Church of the Nativity"
+      },
+      "nablus": {
+        "city": "Nablus",
+        "place": "The Old City and its lively markets"
+      },
+      "hebron": {
+        "city": "Hebron",
+        "place": "Glass, pottery and the Old City"
+      },
+      "jericho": {
+        "city": "Jericho",
+        "place": "One of the oldest cities in the world"
+      }
+    },
+    "map": {
+      "title": "Discover Palestine",
+      "subtitle": "Plan a route between the cities you want to see.",
+      "open": "Open the map",
+      "sea": "Mediterranean Sea",
+      "cities": {
+        "acre": "Acre",
+        "nablus": "Nablus",
+        "jaffa": "Jaffa",
+        "jerusalem": "Jerusalem",
+        "bethlehem": "Bethlehem",
+        "hebron": "Hebron",
+        "jericho": "Jericho"
+      }
+    },
+    "recommendations": {
+      "title": "Recommended for you",
+      "seeAll": "See all",
+      "empty": "No recommendations for this season yet.",
+      "seasons": {
+        "all": "All year",
+        "spring": "Spring",
+        "summer": "Summer",
+        "autumn": "Autumn",
+        "winter": "Winter"
+      },
+      "sample": {
+        "r1": {
+          "title": "Walk the Old City at sunrise",
+          "description": "Quiet alleys, warm light and the first call to prayer."
+        },
+        "r2": {
+          "title": "Sunset by the old port",
+          "description": "Watch the sun go down over the Mediterranean."
+        },
+        "r3": {
+          "title": "Explore the Crusader walls",
+          "description": "Stroll along the historic sea walls and harbor."
+        },
+        "r4": {
+          "title": "Join the olive harvest",
+          "description": "Pick olives with local families in the hills."
+        },
+        "r5": {
+          "title": "Taste the famous knafeh",
+          "description": "A sweet stop in the heart of the Old City."
+        },
+        "r6": {
+          "title": "Visit the Church of the Nativity",
+          "description": "A winter pilgrimage in Bethlehem."
+        },
+        "r7": {
+          "title": "Spring walk among wildflowers",
+          "description": "Green valleys and fresh air near Jericho."
+        }
+      }
+    },
+    "news": {
+      "title": "Official news",
+      "source": "Ministry of Tourism and Antiquities",
+      "latest": "Latest",
+      "empty": "No news to show right now.",
+      "seeAll": "See all news"
+    },
+    "medical": {
+      "title": "Medical profile",
+      "text": "Keep your health details and emergency contacts ready in case you need help while travelling.",
+      "cta": "Add details"
+    },
+"guide": {
+  "title": "Palestinian Tourist Guide",
+  "text": "Explore Palestinian cities and their surroundings before planning your trip",
+  "showAllCities": "Show All Cities",
+  "showAllCitiesSubtitle": "Browse all Palestinian cities without filtering",
+  "browseByCategory": "Browse by Category",
+  "exploreCities": "Explore Cities",
+  "noCategories": "No categories available",
+  "loadError": "Failed to load categories",
+  "retry": "Try Again",
+  
+  "categoryCitiesTitle": "Cities in this Category",
+  "noCitiesFound": "No cities added to this category yet",
+  "exploreDetails": "City Details"
+}
+  },
+  "date": {
+    "months": {
+      "0": "January",
+      "1": "February",
+      "2": "March",
+      "3": "April",
+      "4": "May",
+      "5": "June",
+      "6": "July",
+      "7": "August",
+      "8": "September",
+      "9": "October",
+      "10": "November",
+      "11": "December"
+    }
+  },
+  "news": {
+    "openOriginal": "Read on the ministry website",
+    "notFound": "We couldn't find this article.",
+    "readMore": "Read more"
+  }
+}
