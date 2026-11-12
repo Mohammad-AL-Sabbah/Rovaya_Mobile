@@ -47,3 +47,14 @@ export function sendResetCode(email: string) {
 export function resetPassword(payload: ResetPasswordRequest) {
   return api.patch<BasicResponse>(Endpoints.auth.resetPassword, payload, { auth: false });
 }
+
+
+export async function deleteAccount(password: string) {
+  try {
+    const res = await api.delete<any>('/auth/account/delete-account', { password });
+    return res;
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    throw error;
+  }
+}

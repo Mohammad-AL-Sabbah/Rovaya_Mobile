@@ -200,14 +200,7 @@ export function DiscoverMapCard({ onOpen }: { onOpen: () => void }) {
         })}
       </View>
 
-      <Pressable
-        onPress={onOpen}
-        accessibilityRole="button"
-        style={({ pressed }) => [styles.cta, pressed && { opacity: 0.8 }]}
-      >
-        <Ionicons name="navigate" size={18} color={Brand.deep} />
-        <Text style={styles.ctaText}>{t('home.map.open')}</Text>
-      </Pressable>
+    
     </View>
   );
 }

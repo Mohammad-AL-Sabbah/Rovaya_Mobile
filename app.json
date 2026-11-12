@@ -7,8 +7,15 @@
     "icon": "./assets/images/icon.png",
     "scheme": "rovayamobile",
     "userInterfaceStyle": "automatic",
+    
     "ios": {
-      "icon": "./assets/images/icon.png"
+      "icon": "./assets/images/icon.png",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "يحتاج تطبيق Rovaya إلى موقعك الحالي لعرض الخريطة ورسم المسار بين الأماكن السياحية والمطاعم القريبة منك.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "يحتاج تطبيق Rovaya إلى موقعك لتوفير تجربة ملاحة دقيقة أثناء التنقل بين المدن الفلسطينية.",
+        "NSLocationAlwaysUsageDescription": "يحتاج تطبيق Rovaya إلى موقعك لتوفير تجربة ملاحة دقيقة."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +25,17 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.mohmmadsabbah.Rovaya_Mobile"
+      "package": "com.mohmmadsabbah.Rovaya_Mobile",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBkRA7UyRPDBbxc7rne60Y4QhBcVkgt388"
+        }
+      }
     },
     "web": {
       "output": "static",
@@ -38,12 +55,26 @@
       ],
       "expo-localization",
       "expo-secure-store",
-      "expo-build-properties"
+      "expo-build-properties",
+      [
+        "react-native-maps",
+        {
+          "googleMapsApiKey": "AIzaSyBkRA7UyRPDBbxc7rne60Y4QhBcVkgt388"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "يحتاج تطبيق Rovaya إلى موقعك لعرض الخريطة ورسم المسار بين الأماكن السياحية."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": false,
-      "reactCompiler": true
+      "reactCompiler": false
+      
     },
+    "updates": { "enabled": false },
     "extra": {
       "router": {},
       "eas": {

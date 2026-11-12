@@ -31,7 +31,16 @@ function FadeIn({ children, style }: { children: React.ReactNode; style?: object
   );
 }
 
-export function HomeHero({ name, onProfile }: { name: string; onProfile: () => void }) {
+export function HomeHero({
+  name,
+  avatarUrl,
+  onProfile,
+}: {
+  name: string;
+  /** رابط الصورة الشخصية الكامل (إن وُجد). وإلا يظهر الحرف الأول من الاسم */
+  avatarUrl?: string | null;
+  onProfile: () => void;
+}) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -40,6 +49,13 @@ export function HomeHero({ name, onProfile }: { name: string; onProfile: () => v
   const hour = new Date().getHours();
   const period = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
   const initial = name ? name.trim().charAt(0).toUpperCase() : '?';
+
+  // إذا فشل تحميل الصورة نرجع للحرف الأول، ونعيد المحاولة عند تغيّر الرابط
+  const [imageFailed, setImageFailed] = useState(false);
+  useEffect(() => {
+    setImageFailed(false);
+  }, [avatarUrl]);
+  const showImage = !!avatarUrl && !imageFailed;
 
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -93,7 +109,17 @@ export function HomeHero({ name, onProfile }: { name: string; onProfile: () => v
       <View style={[styles.header, { top: insets.top + 12 }]}>
         <Pressable onPress={onProfile} accessibilityRole="button" style={styles.avatarRing}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarLetter}>{initial}</Text>
+            {showImage ? (
+              <Image
+                source={{ uri: avatarUrl as string }}
+                style={StyleSheet.absoluteFill}
+                contentFit="cover"
+                transition={250}
+                onError={() => setImageFailed(true)}
+              />
+            ) : (
+              <Text style={styles.avatarLetter}>{initial}</Text>
+            )}
           </View>
           <View style={styles.onlineDot} />
         </Pressable>
@@ -153,6 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.green,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   avatarLetter: { color: Brand.white, fontSize: 22, fontWeight: '800', includeFontPadding: false },
   onlineDot: {

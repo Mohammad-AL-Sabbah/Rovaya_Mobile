@@ -225,41 +225,25 @@
     "home": {
       "label": "Home",
       "title": "Home"
-    },
-    "profile": {
-  "welcome": "Welcome",
-  "guest": "Traveler",
-  "loading": "Loading data...",
-  "editProfile": "Edit Profile",
-  "medicalProfile": "Medical Profile",
-  "medicalSubtitle": "Chronic diseases, medications, allergies",
-  "emergencyContacts": "Emergency Contacts",
-  "emergencySubtitle": "Important numbers for emergencies",
-  "changePassword": "Change Password",
-  "notifications": "Notifications",
-  "helpSupport": "Help & Support",
-  "aboutRovaya": "About Rovaya",
-  "sections": {
-    "personal": "Personal",
-    "account": "Account",
-    "support": "Support"
-  }
-}
+    }
   },
   "roles": {
     "SuperAdmin": "Super Admin",
     "Admin": "Staff",
     "Customer": "Traveler"
   },
-  "settings": {
-    "general": "General",
-    "language": "Language",
-    "account": "Account",
-    "signedInAs": "Signed in as",
-    "logout": "Log out",
-    "logoutConfirmTitle": "Log out?",
-    "logoutConfirmText": "You'll need to log in again to access your account."
-  },
+"settings": {
+  "general": "General",
+  "language": "Language",
+  "account": "Account",
+  "signedInAs": "Signed in as",
+  "logout": "Log out",
+  "logoutConfirmTitle": "Log out?",
+  "logoutConfirmText": "You'll need to log in again to access your account.",
+  "deleteAccount": "Delete Account",
+  "deleteAccountConfirmTitle": "Are you sure?",
+  "deleteAccountConfirmText": "This action is permanent and cannot be undone. All your data and trips will be deleted forever. Please enter your password to confirm."
+},
   "home": {
     "guest": "Traveler",
     "footer": "Discover Palestine, your way.",
@@ -380,21 +364,39 @@
       "text": "Keep your health details and emergency contacts ready in case you need help while travelling.",
       "cta": "Add details"
     },
-"guide": {
-  "title": "Palestinian Tourist Guide",
-  "text": "Explore Palestinian cities and their surroundings before planning your trip",
-  "showAllCities": "Show All Cities",
-  "showAllCitiesSubtitle": "Browse all Palestinian cities without filtering",
-  "browseByCategory": "Browse by Category",
-  "exploreCities": "Explore Cities",
-  "noCategories": "No categories available",
-  "loadError": "Failed to load categories",
-  "retry": "Try Again",
-  
-  "categoryCitiesTitle": "Cities in this Category",
-  "noCitiesFound": "No cities added to this category yet",
-  "exploreDetails": "City Details"
-}
+    "guide": {
+      "title": "Palestinian Tourist Guide",
+      "text": "Explore Palestinian cities and their surroundings before planning your trip",
+      "showAllCities": "Show All Cities",
+      "showAllCitiesSubtitle": "Browse all Palestinian cities without filtering",
+      "browseByCategory": "Browse by Category",
+      "exploreCities": "Explore Cities",
+      "noCategories": "No categories available",
+      "loadError": "Failed to load categories",
+      "retry": "Try Again",
+      "categoryCitiesTitle": "Cities in this Category",
+      "noCitiesFound": "No cities added to this category yet",
+      "exploreDetails": "City Details"
+    }
+  },
+  "profile": {
+    "welcome": "Welcome",
+    "guest": "Traveler",
+    "loading": "Loading data...",
+    "editProfile": "Edit Profile",
+    "medicalProfile": "Medical Profile",
+    "medicalSubtitle": "Chronic diseases, medications, allergies",
+    "emergencyContacts": "Emergency Contacts",
+    "emergencySubtitle": "Important numbers for emergencies",
+    "changePassword": "Change Password",
+    "notifications": "Notifications",
+    "helpSupport": "Help & Support",
+    "aboutRovaya": "About Rovaya",
+    "sections": {
+      "personal": "Personal",
+      "account": "Account",
+      "support": "Support"
+    }
   },
   "date": {
     "months": {

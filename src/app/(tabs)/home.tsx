@@ -1,11 +1,13 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { API_URL } from '@/api/config';
+import { fetchProfile } from '@/api/profile';
 import { useAuth } from '@/auth/auth-context';
 import { useTabBarSpace } from '@/components/floating-tab-bar';
 import { DiscoverMapCard } from '@/components/home/discovermap';
@@ -20,12 +22,33 @@ import {
   TripsFeature,
 } from '@/components/home/sections';
 import { SURFACE } from '@/components/tab-screen';
+import { useAsync } from '@/hooks/use-async';
+
+/** الباك إند يرجع مساراً نسبياً (/uploads/profiles/...) فنضيف له دومين السيرفر */
+const resolveImageUrl = (url?: string | null) => {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  const origin = API_URL.replace(/\/api\/?$/i, '').replace(/\/$/, '');
+  return `${origin}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
   const space = useTabBarSpace();
+
+  // ✅ جلب بيانات البروفايل للحصول على الصورة الشخصية
+  const { data: profile, reload } = useAsync(fetchProfile, 'profile');
+
+  // ✅ تحديث الصورة تلقائياً عند العودة لهذه الصفحة (مثلاً بعد تغيير الصورة من البروفايل)
+  useFocusEffect(
+    useCallback(() => {
+      reload();
+    }, [reload])
+  );
+
+  const avatarUrl = resolveImageUrl(profile?.profileImageUrl);
 
   // TODO: تُستبدل بأرقام حقيقية من الـ API عندما تتوفر نقاط الرحلات
   const trips = { active: 0, archived: 0 };
@@ -43,7 +66,11 @@ export default function HomeScreen() {
       <StatusBar style="light" />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: space }}>
-        <HomeHero name={user?.firstName ?? ''} onProfile={toProfile} />
+        <HomeHero
+          name={user?.firstName ?? profile?.firstName ?? ''}
+          avatarUrl={avatarUrl}
+          onProfile={toProfile}
+        />
 
         <View style={styles.sheet}>
           <View style={styles.pad}>
