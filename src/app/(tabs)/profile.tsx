@@ -174,9 +174,7 @@ export default function ProfileScreen() {
               <Text style={styles.headerName} numberOfLines={1}>{fullName || (isArabic ? 'مسافر' : 'Traveler')}</Text>
               <Text style={styles.headerSubtitle}>{isArabic ? 'اكتشف المزيد من رحلتك مع روفايا' : 'Make every journey memorable with ROVAYA'}</Text>
             </View>
-            <Pressable onPress={handleLogout} style={({ pressed }) => [styles.logoutButton, { opacity: pressed ? 0.7 : 1 }]}>
-              <Ionicons name="log-out-outline" size={21} color="#FFFFFF" />
-            </Pressable>
+        
           </View>
           <View style={styles.decorCircleOne} />
           <View style={styles.decorCircleTwo} />

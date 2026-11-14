@@ -1,10 +1,11 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as SecureStore from 'expo-secure-store';
 
 import { API_URL } from '@/api/config';
 import { fetchProfile } from '@/api/profile';
@@ -24,7 +25,6 @@ import {
 import { SURFACE } from '@/components/tab-screen';
 import { useAsync } from '@/hooks/use-async';
 
-/** الباك إند يرجع مساراً نسبياً (/uploads/profiles/...) فنضيف له دومين السيرفر */
 const resolveImageUrl = (url?: string | null) => {
   if (!url) return null;
   if (/^https?:\/\//i.test(url)) return url;
@@ -33,38 +33,59 @@ const resolveImageUrl = (url?: string | null) => {
 };
 
 export default function HomeScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
   const space = useTabBarSpace();
 
-  // ✅ جلب بيانات البروفايل للحصول على الصورة الشخصية
   const { data: profile, reload } = useAsync(fetchProfile, 'profile');
+  const [tripCounts, setTripCounts] = useState({ active: 0, archived: 0 });
 
-  // ✅ تحديث الصورة تلقائياً عند العودة لهذه الصفحة (مثلاً بعد تغيير الصورة من البروفايل)
   useFocusEffect(
     useCallback(() => {
       reload();
+      fetchTripCounts();
     }, [reload])
   );
 
+  const fetchTripCounts = useCallback(async () => {
+    try {
+      const candidateKeys = ['rovaya.accessToken', 'accessToken', 'token', 'userToken', 'rovaya.token'];
+      let token: string | null = null;
+      for (const key of candidateKeys) {
+        const val = await SecureStore.getItemAsync(key);
+        if (val && val.length > 10) { token = val; break; }
+      }
+      if (!token) return;
+
+      const backendOrigin = API_URL.replace(/\/api\/?$/i, '').replace(/\/$/, '');
+      const response = await fetch(`${backendOrigin}/api/Customer/my-trips`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.success && data.data) {
+        const active = data.data.filter((trip: any) => trip.status === 1).length;
+        const archived = data.data.filter((trip: any) => trip.status === 2).length;
+        setTripCounts({ active, archived });
+      }
+    } catch (error) {
+      console.error('❌ Failed to fetch trip counts:', error);
+    }
+  }, []);
+
   const avatarUrl = resolveImageUrl(profile?.profileImageUrl);
-
-  // TODO: تُستبدل بأرقام حقيقية من الـ API عندما تتوفر نقاط الرحلات
-  const trips = { active: 0, archived: 0 };
-
-  // للأقسام التي لم تُبنَ شاشتها بعد
   const comingSoon = () => Alert.alert(t('common.comingSoon'), t('common.comingSoonText'));
 
+  // ✅ دوال التنقل المحدثة
   const toPlanner = () => router.navigate('/planner');
   const toRecommendations = () => router.navigate('/recommendations');
   const toProfile = () => router.navigate('/profile');
   const toGuide = () => router.navigate('/guide');
+  const toMedical = () => router.navigate('/profile/medical'); // ✅ جديد: التنقل للملف الطبي
 
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: space }}>
         <HomeHero
           name={user?.firstName ?? profile?.firstName ?? ''}
@@ -79,15 +100,16 @@ export default function HomeScreen() {
 
           <View style={styles.pad}>
             <QuickActions
-              active={trips.active}
-              archived={trips.archived}
-              onActive={comingSoon}
-              onArchived={comingSoon}
+              active={tripCounts.active}
+              archived={tripCounts.archived}
+              onActive={() => router.navigate('/my-trips')}
+              onArchived={() => router.navigate('/my-trips-archived')}
               onRecommendations={toRecommendations}
             />
           </View>
 
           <View style={styles.pad}>
+            {/* ✅ تم ربط زر "أنشئ رحلة" بصفحة المخطط (Planner) */}
             <TripsFeature onCreate={toPlanner} />
           </View>
 
@@ -95,7 +117,10 @@ export default function HomeScreen() {
             <DiscoverMapCard onOpen={toGuide} />
           </View>
 
-          <RecommendationsSection onSeeAll={toRecommendations} onOpen={toRecommendations} />
+          <RecommendationsSection 
+            onSeeAll={toRecommendations} 
+            onOpen={toRecommendations} 
+          />
 
           <NewsSection
             onOpen={(a) => router.push({ pathname: '/news', params: { id: String(a.id) } })}
@@ -103,14 +128,14 @@ export default function HomeScreen() {
           />
 
           <View style={styles.pad}>
-            <MedicalCard onPress={comingSoon} />
+            {/* ✅ تم ربط زر "أضف بيانات" بصفحة الملف الطبي */}
+            <MedicalCard onPress={toMedical} />
           </View>
 
           <HomeFooter />
         </View>
       </ScrollView>
 
-      {/* تدرج ثابت أعلى الشاشة ليبقى شريط الحالة مقروءاً أثناء التمرير */}
       <LinearGradient
         pointerEvents="none"
         colors={['rgba(5,35,27,0.55)', 'rgba(5,35,27,0)']}

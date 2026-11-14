@@ -1,4 +1,3 @@
-
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -40,44 +39,46 @@ const COLORS = {
 
 const FALLBACK_IMAGE = require('@/assets/images/welcome/jerusalem.jpg');
 
-const SEASONS: Record<string, string> = {
-  all: 'كل المواسم',
-  spring: 'الربيع',
-  summer: 'الصيف',
-  autumn: 'الخريف',
-  winter: 'الشتاء',
+// ✅ دالة موحدة لترجمة القيم الثابتة (المواسم والأنشطة)
+const translateEnum = (value: string | undefined, isAr: boolean): string => {
+  if (!value) return '';
+  const lower = value.toLowerCase();
+
+  const seasons: Record<string, { ar: string; en: string }> = {
+    all: { ar: 'كل المواسم', en: 'All Seasons' },
+    allyear: { ar: 'طوال العام', en: 'All Year' },
+    spring: { ar: 'الربيع', en: 'Spring' },
+    summer: { ar: 'الصيف', en: 'Summer' },
+    autumn: { ar: 'الخريف', en: 'Autumn' },
+    winter: { ar: 'الشتاء', en: 'Winter' },
+  };
+
+  const activities: Record<string, { ar: string; en: string }> = {
+    all: { ar: 'الكل', en: 'All' },
+    nature: { ar: 'طبيعة', en: 'Nature' },
+    cultural: { ar: 'ثقافي', en: 'Cultural' },
+    religious: { ar: 'ديني', en: 'Religious' },
+    adventure: { ar: 'مغامرة', en: 'Adventure' },
+    heritage: { ar: 'تراث', en: 'Heritage' },
+    history: { ar: 'تاريخ', en: 'History' },
+    seaside: { ar: 'بحري', en: 'Seaside' },
+    food: { ar: 'طعام', en: 'Food' },
+  };
+
+  if (seasons[lower]) return isAr ? seasons[lower].ar : seasons[lower].en;
+  if (activities[lower]) return isAr ? activities[lower].ar : activities[lower].en;
+
+  return value; // Fallback للقيمة الأصلية إذا لم تكن في القاموس
 };
 
-const ACTIVITIES: Record<string, string> = {
-  All: 'الكل',
-  Nature: 'طبيعة',
-  Cultural: 'ثقافي',
-  Religious: 'ديني',
-  Adventure: 'مغامرة',
-  Heritage: 'تراث',
-  History: 'تاريخ',
-  Seaside: 'بحري',
-  Food: 'طعام',
-};
+// ✅ تنظيف النص (الباك إند يرسل أحيانًا مسافات أو Tab مثل "\tرحلة عائلية ")
+const clean = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
 
-const EN_SEASONS: Record<string, string> = {
-  all: 'All Seasons',
-  spring: 'Spring',
-  summer: 'Summer',
-  autumn: 'Autumn',
-  winter: 'Winter',
-};
-
-const EN_ACTIVITIES: Record<string, string> = {
-  All: 'All',
-  Nature: 'Nature',
-  Cultural: 'Cultural',
-  Religious: 'Religious',
-  Adventure: 'Adventure',
-  Heritage: 'Heritage',
-  History: 'History',
-  Seaside: 'Seaside',
-  Food: 'Food',
+// ✅ المناسبة حسب اللغة (عربي / إنجليزي) مع بدائل لأسماء الحقول المحتملة
+const localizedOccasion = (rec: any, isAr: boolean): string => {
+  const ar = clean(rec?.occasion ?? rec?.occasionAr);
+  const en = clean(rec?.occasionEn ?? rec?.occasion_en ?? rec?.OccasionEn);
+  return isAr ? ar || en : en || ar;
 };
 
 export default function RecommendationDetailsScreen() {
@@ -86,14 +87,11 @@ export default function RecommendationDetailsScreen() {
   const insets = useSafeAreaInsets();
 
   const isArabic = i18n.language?.startsWith('ar') ?? true;
+  const t = (ar: string, en: string) => (isArabic ? ar : en);
 
-  const [recommendation, setRecommendation] =
-    useState<Recommendation | null>(null);
-
+  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-
-  const direction = isArabic ? 'rtl' : 'ltr';
 
   useEffect(() => {
     let isMounted = true;
@@ -113,19 +111,14 @@ export default function RecommendationDetailsScreen() {
 
       try {
         const data = await fetchRecommendationById(numericId);
-
         if (isMounted) {
           setRecommendation(data);
           setError(!data);
         }
       } catch {
-        if (isMounted) {
-          setError(true);
-        }
+        if (isMounted) setError(true);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
@@ -136,7 +129,15 @@ export default function RecommendationDetailsScreen() {
     };
   }, [id]);
 
-  const t = (ar: string, en: string) => (isArabic ? ar : en);
+  // تشخيص (وضع التطوير فقط): هل وصل occasionEn من طبقة الـ API؟
+  useEffect(() => {
+    if (__DEV__ && recommendation) {
+      console.log('[recommendation] occasion fields →', {
+        occasion: (recommendation as any).occasion,
+        occasionEn: (recommendation as any).occasionEn,
+      });
+    }
+  }, [recommendation]);
 
   const title = recommendation
     ? localizedTitle(recommendation, isArabic ? 'ar' : 'en')
@@ -146,18 +147,12 @@ export default function RecommendationDetailsScreen() {
     ? localizedDescription(recommendation, isArabic ? 'ar' : 'en')
     : '';
 
-  const season = recommendation?.season;
-  const activity = recommendation?.activityType;
+  // ✅ ترجمة الموسم والنشاط ديناميكياً
+  const seasonDisplay = translateEnum(recommendation?.season, isArabic);
+  const activityDisplay = translateEnum(recommendation?.activityType, isArabic);
 
-  const seasonDisplay = season
-    ? (isArabic ? SEASONS[season.toLowerCase()] : EN_SEASONS[season.toLowerCase()])
-      || season
-    : '';
-
-  const activityDisplay = activity
-    ? (isArabic ? ACTIVITIES[activity] : EN_ACTIVITIES[activity])
-      || activity
-    : '';
+  // ✅ المناسبة باللغة الصحيحة
+  const occasionDisplay = recommendation ? localizedOccasion(recommendation, isArabic) : '';
 
   const imageSource = recommendation?.imageUrl
     ? resolveMediaUrl(recommendation.imageUrl)
@@ -183,11 +178,7 @@ export default function RecommendationDetailsScreen() {
       ) : (
         <>
           <View style={styles.errorIcon}>
-            <Ionicons
-              name="alert-circle-outline"
-              size={38}
-              color={COLORS.muted}
-            />
+            <Ionicons name="alert-circle-outline" size={38} color={COLORS.muted} />
           </View>
 
           <Text style={styles.stateTitle}>
@@ -203,10 +194,7 @@ export default function RecommendationDetailsScreen() {
 
           <Pressable
             onPress={goBack}
-            style={({ pressed }) => [
-              styles.backButton,
-              pressed && styles.pressed,
-            ]}
+            style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}
           >
             <Ionicons
               name={isArabic ? 'arrow-forward' : 'arrow-back'}
@@ -242,11 +230,7 @@ export default function RecommendationDetailsScreen() {
           />
 
           <LinearGradient
-            colors={[
-              'rgba(5,25,19,0.15)',
-              'rgba(5,25,19,0.25)',
-              'rgba(5,25,19,0.88)',
-            ]}
+            colors={['rgba(5,25,19,0.15)', 'rgba(5,25,19,0.25)', 'rgba(5,25,19,0.88)']}
             locations={[0, 0.45, 1]}
             style={StyleSheet.absoluteFill}
           />
@@ -263,10 +247,7 @@ export default function RecommendationDetailsScreen() {
           >
             <Pressable
               onPress={goBack}
-              style={({ pressed }) => [
-                styles.iconButton,
-                pressed && styles.pressed,
-              ]}
+              style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
               accessibilityLabel={t('رجوع', 'Go back')}
             >
               <Ionicons
@@ -280,17 +261,10 @@ export default function RecommendationDetailsScreen() {
               onPress={() => {
                 // يمكن ربط المفضلة لاحقاً
               }}
-              style={({ pressed }) => [
-                styles.iconButton,
-                pressed && styles.pressed,
-              ]}
+              style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
               accessibilityLabel={t('إضافة للمفضلة', 'Add to favorites')}
             >
-              <Ionicons
-                name="heart-outline"
-                size={22}
-                color={COLORS.white}
-              />
+              <Ionicons name="heart-outline" size={22} color={COLORS.white} />
             </Pressable>
           </View>
 
@@ -302,15 +276,14 @@ export default function RecommendationDetailsScreen() {
             ]}
           >
             <Text
-              style={[
-                styles.heroTitle,
-                { textAlign: isArabic ? 'right' : 'left' },
-              ]}
+              style={[styles.heroTitle, { textAlign: isArabic ? 'right' : 'left' }]}
               numberOfLines={3}
             >
               {title}
             </Text>
 
+            {/* ملاحظة: إذا كان الباك إند يرسل placeName بالعربية فقط، سيظهر بالعربية.
+                يفضل تحديث الباك إند ليرسل placeNameAr و placeNameEn مستقبلاً */}
             {recommendation.placeName && (
               <View
                 style={[
@@ -318,11 +291,7 @@ export default function RecommendationDetailsScreen() {
                   { flexDirection: isArabic ? 'row-reverse' : 'row' },
                 ]}
               >
-                <Ionicons
-                  name="location"
-                  size={15}
-                  color={COLORS.gold}
-                />
+                <Ionicons name="location" size={15} color={COLORS.gold} />
                 <Text
                   style={[
                     styles.heroLocationText,
@@ -350,11 +319,7 @@ export default function RecommendationDetailsScreen() {
                     { flexDirection: isArabic ? 'row-reverse' : 'row' },
                   ]}
                 >
-                  <Ionicons
-                    name="calendar-outline"
-                    size={14}
-                    color={COLORS.forest}
-                  />
+                  <Ionicons name="calendar-outline" size={14} color={COLORS.forest} />
                   <Text style={styles.badgeText}>{seasonDisplay}</Text>
                 </View>
               )}
@@ -367,11 +332,7 @@ export default function RecommendationDetailsScreen() {
                     { flexDirection: isArabic ? 'row-reverse' : 'row' },
                   ]}
                 >
-                  <Ionicons
-                    name="compass-outline"
-                    size={14}
-                    color={COLORS.forest}
-                  />
+                  <Ionicons name="compass-outline" size={14} color={COLORS.forest} />
                   <Text style={styles.badgeText}>{activityDisplay}</Text>
                 </View>
               )}
@@ -383,32 +344,22 @@ export default function RecommendationDetailsScreen() {
         <View style={styles.contentBody}>
           <View style={styles.sectionHeader}>
             <Text
-              style={[
-                styles.sectionTitle,
-                { textAlign: isArabic ? 'right' : 'left' },
-              ]}
+              style={[styles.sectionTitle, { textAlign: isArabic ? 'right' : 'left' }]}
             >
               {t('عن هذه التوصية', 'About this recommendation')}
             </Text>
-
             <View style={styles.titleAccent} />
           </View>
 
           {description ? (
             <Text
-              style={[
-                styles.descriptionText,
-                { textAlign: isArabic ? 'right' : 'left' },
-              ]}
+              style={[styles.descriptionText, { textAlign: isArabic ? 'right' : 'left' }]}
             >
               {description}
             </Text>
           ) : (
             <Text
-              style={[
-                styles.noDescription,
-                { textAlign: isArabic ? 'right' : 'left' },
-              ]}
+              style={[styles.noDescription, { textAlign: isArabic ? 'right' : 'left' }]}
             >
               {t(
                 'لا يوجد وصف متاح لهذه التوصية حالياً.',
@@ -418,7 +369,7 @@ export default function RecommendationDetailsScreen() {
           )}
 
           {/* Special Occasion */}
-          {recommendation.occasion && (
+          {occasionDisplay ? (
             <View
               style={[
                 styles.occasionBox,
@@ -426,11 +377,7 @@ export default function RecommendationDetailsScreen() {
               ]}
             >
               <View style={styles.occasionIcon}>
-                <Ionicons
-                  name="star"
-                  size={19}
-                  color={COLORS.gold}
-                />
+                <Ionicons name="star" size={19} color={COLORS.gold} />
               </View>
 
               <View style={styles.occasionTextContainer}>
@@ -449,11 +396,11 @@ export default function RecommendationDetailsScreen() {
                     { textAlign: isArabic ? 'right' : 'left' },
                   ]}
                 >
-                  {recommendation.occasion}
+                  {occasionDisplay}
                 </Text>
               </View>
             </View>
-          )}
+          ) : null}
 
           <View style={styles.bottomSpacing} />
         </View>
@@ -467,12 +414,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.paper,
   },
-
   scrollContent: {
     flexGrow: 1,
   },
-
-  // Loading / Error
   stateContainer: {
     flex: 1,
     alignItems: 'center',
@@ -480,7 +424,6 @@ const styles = StyleSheet.create({
     gap: 16,
     paddingHorizontal: 32,
   },
-
   errorIcon: {
     width: 76,
     height: 76,
@@ -489,21 +432,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   stateTitle: {
     color: COLORS.ink,
     fontSize: 19,
     fontWeight: '800',
     textAlign: 'center',
   },
-
   stateText: {
     color: COLORS.muted,
     fontSize: 14,
     lineHeight: 23,
     textAlign: 'center',
   },
-
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -515,32 +455,26 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 10,
   },
-
   backButtonText: {
     color: COLORS.white,
     fontSize: 14,
     fontWeight: '800',
   },
-
   pressed: {
     opacity: 0.75,
     transform: [{ scale: 0.97 }],
   },
-
-  // Hero
   heroContainer: {
     height: 390,
     position: 'relative',
     backgroundColor: COLORS.forestSoft,
     overflow: 'hidden',
   },
-
   heroImage: {
     width: '100%',
     height: '100%',
     position: 'absolute',
   },
-
   heroHeader: {
     position: 'absolute',
     top: 0,
@@ -551,7 +485,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 2,
   },
-
   iconButton: {
     width: 44,
     height: 44,
@@ -562,7 +495,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   heroContent: {
     position: 'absolute',
     left: 24,
@@ -570,7 +502,6 @@ const styles = StyleSheet.create({
     bottom: 94,
     gap: 10,
   },
-
   heroTitle: {
     color: COLORS.white,
     fontSize: 27,
@@ -580,19 +511,15 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 5,
   },
-
   heroLocation: {
     alignItems: 'center',
     gap: 6,
   },
-
   heroLocationText: {
     color: 'rgba(255,255,255,0.9)',
     fontSize: 14,
     fontWeight: '600',
   },
-
-  // Badges
   heroBadges: {
     position: 'absolute',
     bottom: 22,
@@ -601,7 +528,6 @@ const styles = StyleSheet.create({
     gap: 9,
     flexWrap: 'wrap',
   },
-
   badge: {
     alignItems: 'center',
     gap: 6,
@@ -611,57 +537,46 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     elevation: 3,
   },
-
   badgeSecondary: {
     backgroundColor: COLORS.forestSoft,
   },
-
   badgeText: {
     color: COLORS.forest,
     fontSize: 12,
     fontWeight: '800',
   },
-
-  // Body
   contentBody: {
     paddingHorizontal: 24,
     paddingTop: 28,
     paddingBottom: 24,
     gap: 18,
   },
-
   sectionHeader: {
     gap: 9,
   },
-
   sectionTitle: {
     color: COLORS.ink,
     fontSize: 20,
     fontWeight: '900',
   },
-
   titleAccent: {
     width: 42,
     height: 3,
     borderRadius: 3,
     backgroundColor: COLORS.gold,
   },
-
   descriptionText: {
     color: COLORS.body,
     fontSize: 16,
     lineHeight: 30,
     fontWeight: '400',
   },
-
   noDescription: {
     color: COLORS.muted,
     fontSize: 14,
     lineHeight: 25,
     fontStyle: 'italic',
   },
-
-  // Occasion
   occasionBox: {
     alignItems: 'center',
     gap: 13,
@@ -672,7 +587,6 @@ const styles = StyleSheet.create({
     borderColor: COLORS.occasionBorder,
     marginTop: 6,
   },
-
   occasionIcon: {
     width: 40,
     height: 40,
@@ -681,25 +595,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   occasionTextContainer: {
     flex: 1,
     gap: 5,
   },
-
   occasionLabel: {
     color: COLORS.muted,
     fontSize: 12,
     fontWeight: '700',
   },
-
   occasionValue: {
     color: COLORS.ink,
     fontSize: 15,
     fontWeight: '800',
     lineHeight: 23,
   },
-
   bottomSpacing: {
     height: 12,
   },

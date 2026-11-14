@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "rovayamobile",
     "userInterfaceStyle": "automatic",
-    
     "ios": {
       "icon": "./assets/images/icon.png",
       "supportsTablet": true,
@@ -72,14 +71,16 @@
     "experiments": {
       "typedRoutes": false,
       "reactCompiler": false
-      
     },
-    "updates": { "enabled": false },
+    "updates": {
+      "enabled": false
+    },
     "extra": {
       "router": {},
       "eas": {
         "projectId": "319e7dfb-8e89-4e67-a3a0-85eca8f7755d"
-      }
+      },
+        "googleMapsApiKey": "AIzaSyBkRA7UyRPDBbxc7rne60Y4QhBcVkgt388"
     }
   }
 }

@@ -15,7 +15,10 @@ export interface Recommendation {
   season: Season;
   /** مثل Nature / Heritage ... (نص كما يأتي من الـ enum) */
   activityType: string | null;
+  /** المناسبة بالعربية */
   occasion: string | null;
+  /** المناسبة بالإنجليزية (يكتبها الموظف في لوحة التحكم) */
+  occasionEn?: string | null;
   placeName: string | null;
   imageUrl: string | null;
   displayOrder: number;
@@ -31,6 +34,12 @@ export function localizedTitle(r: Recommendation, language: 'ar' | 'en') {
 }
 export function localizedDescription(r: Recommendation, language: 'ar' | 'en') {
   return language === 'ar' ? r.descriptionAr || r.descriptionEn : r.descriptionEn || r.descriptionAr;
+}
+/** المناسبة حسب لغة الواجهة، مع الرجوع للغة الأخرى إن كان الحقل فارغاً */
+export function localizedOccasion(r: Recommendation, language: 'ar' | 'en') {
+  const ar = (r.occasion ?? '').trim();
+  const en = (r.occasionEn ?? '').trim();
+  return language === 'ar' ? ar || en : en || ar;
 }
 
 /** صورة محلية احتياطية عندما يكون الرابط فارغاً أو لا يُحمَّل (مثل example.com) */
@@ -69,11 +78,17 @@ const SEASON_QUERY: Record<Exclude<Season, 'all'>, string> = {
 };
 
 const SEASON_FROM_BACKEND: Record<string, Season> = {
-  all: 'all', '0': 'all',
+  all: 'all', allyear: 'all', '0': 'all',
   spring: 'spring', summer: 'summer', autumn: 'autumn', fall: 'autumn', winter: 'winter',
 };
 
 const str = (v: unknown) => (v == null ? '' : String(v));
+
+/** نص نظيف أو null (الباك إند يرسل أحيانًا مسافات أو Tab مثل "\tرحلة عائلية ") */
+const textOrNull = (v: unknown): string | null => {
+  const s = typeof v === 'string' ? v.trim() : '';
+  return s ? s : null;
+};
 
 /** يطابق RecommendationResponse الفعلي (titleAr/titleEn/descriptionAr/descriptionEn ...) مع تسامح مع الأسماء البديلة */
 export function mapRecommendation(raw: any): Recommendation {
@@ -88,7 +103,8 @@ export function mapRecommendation(raw: any): Recommendation {
     descriptionEn: str(raw.descriptionEn ?? raw.description ?? ''),
     season: SEASON_FROM_BACKEND[season] ?? 'all',
     activityType: raw.activityType != null ? str(raw.activityType) : null,
-    occasion: raw.occasion ?? null,
+    occasion: textOrNull(raw.occasion ?? raw.occasionAr),
+    occasionEn: textOrNull(raw.occasionEn ?? raw.occasion_en),
     placeName: raw.suggestedPlaceName ?? place?.name ?? null,
     imageUrl: resolveMediaUrl(raw.imageUrl ?? place?.imageUrl ?? null),
     displayOrder: Number(raw.displayOrder ?? 0),
@@ -141,7 +157,7 @@ const mock = (
 ): Recommendation => ({
   id, sampleKey, season, photoKey, displayOrder, activityType,
   titleAr: '', titleEn: '', descriptionAr: '', descriptionEn: '',
-  occasion: null, placeName: null, imageUrl: null, isActive: true,
+  occasion: null, occasionEn: null, placeName: null, imageUrl: null, isActive: true,
 });
 
 const RECOMMENDATIONS_MOCK: Recommendation[] = [
@@ -168,17 +184,17 @@ export const fetchRecommendations = fetchAllRecommendations;
 export async function fetchRecommendationById(id: number): Promise<Recommendation | null> {
   try {
     console.log(`[API] Fetching recommendation ID: ${id}`);
-    
+
     // الـ Backend يرجع البيانات مباشرة في الـ Root Object
     const res = await api.get<any>(Endpoints.recommendations.byId(id));
-    
+
     console.log('[API] Response:', res);
-    
+
     // التحقق من success مباشرة، لأن البيانات ليست داخل res.data
     if (res.success) {
       return mapRecommendation(res); // مرر الـ res كاملاً لأنه يحتوي على البيانات
     }
-    
+
     console.warn('[API] No data returned or success is false');
     return null;
   } catch (error) {
