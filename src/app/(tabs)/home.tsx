@@ -2,10 +2,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
+import { Ionicons } from '@expo/vector-icons';
 
 import { API_URL } from '@/api/config';
 import { fetchProfile } from '@/api/profile';
@@ -24,6 +25,7 @@ import {
 } from '@/components/home/sections';
 import { SURFACE } from '@/components/tab-screen';
 import { useAsync } from '@/hooks/use-async';
+import { Brand } from '@/constants/brand';
 
 const resolveImageUrl = (url?: string | null) => {
   if (!url) return null;
@@ -37,6 +39,8 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
   const space = useTabBarSpace();
+  const isArabic = !!i18n.language?.startsWith('ar');
+  const tr = (ar: string, en: string) => (isArabic ? ar : en);
 
   const { data: profile, reload } = useAsync(fetchProfile, 'profile');
   const [tripCounts, setTripCounts] = useState({ active: 0, archived: 0 });
@@ -76,12 +80,12 @@ export default function HomeScreen() {
   const avatarUrl = resolveImageUrl(profile?.profileImageUrl);
   const comingSoon = () => Alert.alert(t('common.comingSoon'), t('common.comingSoonText'));
 
-  // ✅ دوال التنقل المحدثة
   const toPlanner = () => router.navigate('/planner');
   const toRecommendations = () => router.navigate('/recommendations');
   const toProfile = () => router.navigate('/profile');
   const toGuide = () => router.navigate('/guide');
-  const toMedical = () => router.navigate('/profile/medical'); // ✅ جديد: التنقل للملف الطبي
+  const toMedical = () => router.navigate('/profile/medical');
+  const toSupport = () => router.navigate('/support');
 
   return (
     <View style={styles.container}>
@@ -109,7 +113,6 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.pad}>
-            {/* ✅ تم ربط زر "أنشئ رحلة" بصفحة المخطط (Planner) */}
             <TripsFeature onCreate={toPlanner} />
           </View>
 
@@ -117,9 +120,9 @@ export default function HomeScreen() {
             <DiscoverMapCard onOpen={toGuide} />
           </View>
 
-          <RecommendationsSection 
-            onSeeAll={toRecommendations} 
-            onOpen={toRecommendations} 
+          <RecommendationsSection
+            onSeeAll={toRecommendations}
+            onOpen={toRecommendations}
           />
 
           <NewsSection
@@ -128,8 +131,41 @@ export default function HomeScreen() {
           />
 
           <View style={styles.pad}>
-            {/* ✅ تم ربط زر "أضف بيانات" بصفحة الملف الطبي */}
             <MedicalCard onPress={toMedical} />
+          </View>
+
+          {/* ✅ بطاقة الدعم الفني - الاتجاه الديناميكي يُطبَّق هنا في JSX وليس في StyleSheet */}
+          <View style={styles.pad}>
+            <Pressable
+              onPress={toSupport}
+              style={({ pressed }) => [
+                styles.supportCard,
+                isArabic && styles.supportCardRTL,
+                pressed && styles.pressed,
+              ]}
+            >
+              <View style={styles.supportIconBox}>
+                <Ionicons name="help-circle" size={28} color={Brand.green} />
+              </View>
+
+              <View style={styles.supportTextContainer}>
+                <Text style={styles.supportTitle}>
+                  {tr('هل تواجه مشكلة؟', 'Facing an issue?')}
+                </Text>
+                <Text style={styles.supportSubtitle}>
+                  {tr(
+                    'تواصل مع فريق الدعم الفني لمساعدتك',
+                    'Contact our support team for assistance'
+                  )}
+                </Text>
+              </View>
+
+              <Ionicons
+                name={isArabic ? 'arrow-back' : 'arrow-forward'}
+                size={20}
+                color={Brand.muted}
+              />
+            </Pressable>
           </View>
 
           <HomeFooter />
@@ -145,6 +181,7 @@ export default function HomeScreen() {
   );
 }
 
+// ✅ StyleSheet ثابت تماماً - لا يحتوي على أي متغيرات من المكوّن
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: SURFACE },
   sheet: {
@@ -157,4 +194,43 @@ const styles = StyleSheet.create({
   },
   pad: { paddingHorizontal: 20 },
   statusScrim: { position: 'absolute', top: 0, left: 0, right: 0 },
+
+  // بطاقة الدعم الفني
+  supportCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: '#E5ECE7',
+    gap: 16,
+  },
+  supportCardRTL: {
+    flexDirection: 'row-reverse',
+  },
+  pressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.99 }],
+  },
+  supportIconBox: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: '#F0FDF4',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  supportTextContainer: { flex: 1 },
+  supportTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: Brand.greenText,
+    marginBottom: 4,
+  },
+  supportSubtitle: {
+    fontSize: 13,
+    color: Brand.muted,
+    lineHeight: 18,
+  },
 });

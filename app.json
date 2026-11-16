@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#EAF1EC",
         "foregroundImage": "./assets/images/icon.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -45,10 +45,19 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#123E34",
+          "image": "./assets/images/icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
           "android": {
-            "image": "./assets/images/splash-icon.png",
-            "imageWidth": 76
+            "image": "./assets/images/icon.png",
+            "imageWidth": 200,
+            "resizeMode": "contain"
+          },
+          "ios": {
+            "image": "./assets/images/icon.png",
+            "imageWidth": 200,
+            "resizeMode": "contain"
           }
         }
       ],
@@ -80,7 +89,7 @@
       "eas": {
         "projectId": "319e7dfb-8e89-4e67-a3a0-85eca8f7755d"
       },
-        "googleMapsApiKey": "AIzaSyBkRA7UyRPDBbxc7rne60Y4QhBcVkgt388"
+      "googleMapsApiKey": "AIzaSyBkRA7UyRPDBbxc7rne60Y4QhBcVkgt388"
     }
   }
 }
